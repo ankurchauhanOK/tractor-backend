@@ -36,9 +36,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 COPY . .
 
-RUN mkdir -p /app/storage /app/uploads && \
-    adduser --disabled-password --gecos "" appuser && \
-    chown -R appuser:appuser /app/storage /app/uploads
+RUN mkdir -p /app/storage /app/uploads
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -46,8 +44,6 @@ ENV PYTHONUNBUFFERED=1 \
     STORAGE_DIR=/app/storage
 
 EXPOSE 8000
-
-USER appuser
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["api"]
