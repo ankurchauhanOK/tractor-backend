@@ -1,14 +1,19 @@
 import logging
 from typing import Tuple
 
-import cv2
-import numpy as np
-
 logger = logging.getLogger(__name__)
 
 
 class ImageEnhancer:
+    def __init__(self):
+        import cv2
+        import numpy as np
+        self._cv2 = cv2
+        self._np = np
+
     def enhance(self, image_bytes: bytes) -> Tuple[bytes, dict]:
+        cv2 = self._cv2
+        np = self._np
         steps_applied = []
         img_array = np.frombuffer(image_bytes, np.uint8)
         img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
@@ -62,7 +67,9 @@ class ImageEnhancer:
             "size_reduction_pct": round(size_reduction, 1),
         }
 
-    def _deskew(self, img: np.ndarray) -> Tuple[np.ndarray, float]:
+    def _deskew(self, img: "np.ndarray") -> Tuple["np.ndarray", float]:
+        np = self._np
+        cv2 = self._cv2
         coords = np.column_stack(np.where(img < 255))
         if len(coords) < 10:
             return img, 0.0

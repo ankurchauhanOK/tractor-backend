@@ -2,18 +2,18 @@ import os
 import uuid
 import logging
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from faster_whisper import WhisperModel
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-model: WhisperModel | None = None
+model: object | None = None
 
 
-def get_model() -> WhisperModel:
+def get_model():
     global model
     if model is None:
+        from faster_whisper import WhisperModel
         logger.info("Loading Whisper model (base, CPU)...")
         model = WhisperModel("base", device="cpu", compute_type="int8")
         logger.info("Whisper model loaded.")

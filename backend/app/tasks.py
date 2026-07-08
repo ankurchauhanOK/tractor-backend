@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from functools import lru_cache
 from typing import Optional
 
 from sqlalchemy.orm import Session
@@ -17,16 +18,27 @@ from app.models.database import (
     SessionLocal,
     SystemEvent,
 )
-from app.services.enhancement.enhancer import ImageEnhancer
-from app.services.extraction.engine import ExtractionEngine
-from app.services.ocr.service import OCRService
 from app.services.storage import storage
 
 logger = logging.getLogger(__name__)
 
-enhancer = ImageEnhancer()
-ocr_service = OCRService()
-extraction = ExtractionEngine()
+
+@lru_cache(maxsize=1)
+def get_enhancer():
+    from app.services.enhancement.enhancer import ImageEnhancer
+    return ImageEnhancer()
+
+
+@lru_cache(maxsize=1)
+def get_ocr_service():
+    from app.services.ocr.service import OCRService
+    return OCRService()
+
+
+@lru_cache(maxsize=1)
+def get_extraction():
+    from app.services.extraction.engine import ExtractionEngine
+    return ExtractionEngine()
 
 
 def _update_batch_summaries(batch_id: int, db: Session):
@@ -153,20 +165,20 @@ def process_page(self, inspection_id: int):
             )
 
         # 2. Enhance image
-        enhanced_bytes, enhance_meta = enhancer.enhance(orig_bytes)
+        enhanced_bytes, enhance_meta = get_enhancer().enhance(orig_bytes)
         storage.save_enhanced(batch.batch_no, inspection.page_number, enhanced_bytes)
 
         # 3. Run OCR on enhanced image
-        ocr_result = ocr_service.process_bytes(enhanced_bytes)
+        ocr_result = get_ocr_service().process_bytes(enhanced_bytes)
 
         # Save OCR JSON to storage
         storage.save_ocr_json(batch.batch_no, inspection.page_number, ocr_result.to_dict())
 
         # 4. Extract structured fields
-        extracted = extraction.extract(ocr_result.raw_text, ocr_result.confidence)
+        extracted = get_extraction().extract(ocr_result.raw_text, ocr_result.confidence)
 
         # 5. Check for duplicates
-        dup_info = extraction.check_duplicate(
+        dup_info = get_extraction().check_duplicate(
             inspection.id,
             extracted.tractor_no,
             extracted.engine_no,

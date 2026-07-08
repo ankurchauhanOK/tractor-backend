@@ -45,6 +45,11 @@ def read_root():
     return {"message": "Tractor Inspection OCR System API"}
 
 
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok"}
+
+
 @app.get("/health")
 def health():
     return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
