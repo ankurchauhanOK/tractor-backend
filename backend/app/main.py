@@ -22,13 +22,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Tractor Inspection OCR System", lifespan=lifespan)
 
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:3001,https://tractor-inspection-ocr.vercel.app").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "https://tractor-inspection-ocr.vercel.app",
-    ],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
