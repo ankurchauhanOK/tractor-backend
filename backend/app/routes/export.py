@@ -3,7 +3,8 @@ from datetime import datetime
 from io import BytesIO
 
 import pandas as pd
-from fastapi import APIRouter, Depends, HTTPException, StreamingResponse
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 from pydantic import BaseModel
