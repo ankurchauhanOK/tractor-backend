@@ -1,5 +1,7 @@
+import logging
 import os
 from datetime import datetime
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,9 +11,16 @@ from sqlalchemy import text
 from app.config import REDIS_URL
 from app.models.database import engine, init_db
 
-init_db()
 
-app = FastAPI(title="Tractor Inspection OCR System")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        init_db()
+    except Exception as e:
+        logging.warning("Database init failed at startup: %s", e)
+    yield
+
+app = FastAPI(title="Tractor Inspection OCR System", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
