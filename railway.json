@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "backend/Dockerfile"
+  },
+  "deploy": {
+    "startCommand": "backend/docker-entrypoint.sh api"
+  }
+}
