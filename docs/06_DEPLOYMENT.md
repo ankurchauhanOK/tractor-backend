@@ -9,7 +9,7 @@
        ↓
 [FastAPI Web Service]   ←  CMD ["api"]
        ↕                        ↕
-[PostgreSQL]          [Redis]
+[PostgreSQL]          [Redis]   [Cloudflare R2]
                            ↕
 [Celery Worker]      ←  CMD ["worker"]
 ```
@@ -17,6 +17,14 @@
 ### Prerequisites
 - GitHub repo with code pushed
 - Render account
+- Cloudflare R2 bucket (or any S3-compatible storage)
+
+### Step 0: Create R2 Bucket
+- Cloudflare Dashboard → **R2** → Create Bucket
+- Name: `tractor-ocr`
+- Make bucket publicly accessible (for image serving)
+- Note: `S3_PUBLIC_URL` is the public bucket URL (e.g. `https://pub-xxxx.r2.dev`)
+- Generate R2 API tokens for `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY`
 
 ### Step 1: Create PostgreSQL
 - Render Dashboard → **New → PostgreSQL**
@@ -37,10 +45,16 @@
 - **Dockerfile Path**: `backend/Dockerfile`
 - **Docker Command**: `api`
 - Plan: Starter
-- **Add Disk** → mount at `/app/storage`, size 1 GB
+- No persistent disk needed (files stored in R2)
 - **Environment Variables** (Render auto-injects these from linked services):
   - `DATABASE_URL` ← auto from PostgreSQL
   - `REDIS_URL` ← auto from Redis
+  - `STORAGE_BACKEND`: `s3`
+  - `S3_ENDPOINT`: `https://<accountid>.r2.cloudflarestorage.com`
+  - `S3_ACCESS_KEY_ID`: `<your-r2-access-key>`
+  - `S3_SECRET_ACCESS_KEY`: `<your-r2-secret-key>`
+  - `S3_BUCKET_NAME`: `tractor-ocr`
+  - `S3_PUBLIC_URL`: `https://pub-<hash>.r2.dev`
   - `UVICORN_WORKERS`: `2`
   - `LOG_LEVEL`: `info`
   - `CORS_ORIGINS`: `https://tractor-inspection-ocr.vercel.app`
@@ -52,9 +66,16 @@
 - **Dockerfile Path**: `backend/Dockerfile`
 - **Docker Command**: `worker`
 - Plan: Starter
+- No persistent disk needed (files stored in R2)
 - **Environment Variables**:
   - `DATABASE_URL` ← auto from PostgreSQL
   - `REDIS_URL` ← auto from Redis
+  - `STORAGE_BACKEND`: `s3`
+  - `S3_ENDPOINT`: `https://<accountid>.r2.cloudflarestorage.com`
+  - `S3_ACCESS_KEY_ID`: `<your-r2-access-key>`
+  - `S3_SECRET_ACCESS_KEY`: `<your-r2-secret-key>`
+  - `S3_BUCKET_NAME`: `tractor-ocr`
+  - `S3_PUBLIC_URL`: `https://pub-<hash>.r2.dev`
   - `WORKER_COUNT`: `4`
   - `CELERY_QUEUES`: `default,ocr`
   - `LOG_LEVEL`: `info`
@@ -76,6 +97,13 @@
 | DATABASE_URL | Yes | api, worker | localhost:5432 | PostgreSQL connection string |
 | REDIS_URL | Yes | api, worker | localhost:6379 | Redis connection string |
 | PORT | Yes (Render) | api | 8000 | Server port (Render sets this) |
+| STORAGE_BACKEND | No | both | local | Storage backend: local or s3 |
+| S3_ENDPOINT | When s3 | both | — | S3-compatible endpoint URL |
+| S3_ACCESS_KEY_ID | When s3 | both | — | S3 access key |
+| S3_SECRET_ACCESS_KEY | When s3 | both | — | S3 secret key |
+| S3_BUCKET_NAME | When s3 | both | — | S3 bucket name |
+| S3_REGION | No | both | auto | S3 region |
+| S3_PUBLIC_URL | No | both | — | Public URL for image serving |
 | UVICORN_WORKERS | No | api | 4 | Number of uvicorn workers |
 | WORKER_COUNT | No | worker | 8 | Celery worker concurrency |
 | CELERY_QUEUES | No | worker | default,ocr | Comma-separated queue names |
@@ -83,12 +111,12 @@
 | CELERY_MAX_MEMORY | No | worker | 500000 | Max memory per child (KB) |
 | LOG_LEVEL | No | both | info | Logging level |
 | CORS_ORIGINS | No | api | localhost:3000,... | Comma-separated allowed origins |
-| UPLOAD_DIR | No | both | ./uploads | Upload directory |
-| STORAGE_DIR | No | both | ./storage | Storage directory (use Disk mount) |
+| STORAGE_DIR | No | both | ./storage | Local directory (used when STORAGE_BACKEND=local) |
 | OCR_VERSION | No | both | paddleocr-3.7.0 | OCR engine version tag |
 | AI_VERSION | No | both | mahindra-ai-v1.0 | AI pipeline version tag |
 | PDF_DPI | No | both | 300 | PDF rendering DPI |
 | MAX_PDF_PAGES | No | both | 500 | Max pages per PDF |
+| MAX_UPLOAD_SIZE_MB | No | api | 500 | Max PDF upload size in MB |
 | MAX_RETRY_COUNT | No | both | 3 | OCR retry count |
 
 ## Local Development
@@ -98,7 +126,7 @@
 cd backend
 docker compose up -d
 ```
-This starts PostgreSQL, Redis, API, Celery worker, and Celery beat.
+This starts PostgreSQL, Redis, API, and Celery worker.
 
 ### Manual
 ```bash

@@ -20,14 +20,13 @@ from app.models.database import (
 from app.services.enhancement.enhancer import ImageEnhancer
 from app.services.extraction.engine import ExtractionEngine
 from app.services.ocr.service import OCRService
-from app.services.storage import LocalStorage
+from app.services.storage import storage
 
 logger = logging.getLogger(__name__)
 
 enhancer = ImageEnhancer()
 ocr_service = OCRService()
 extraction = ExtractionEngine()
-storage = LocalStorage()
 
 
 def _update_batch_summaries(batch_id: int, db: Session):

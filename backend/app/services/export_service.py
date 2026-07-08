@@ -8,11 +8,9 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 from app.models.database import Batch, Inspection
-from app.services.storage import LocalStorage
+from app.services.storage import storage
 
 logger = logging.getLogger(__name__)
-
-storage = LocalStorage()
 
 
 def _inspection_rows(inspections: List[Inspection]) -> List[dict]:

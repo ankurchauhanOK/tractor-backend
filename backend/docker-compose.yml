@@ -41,8 +41,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - storage_data:/app/storage
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/inspections
       REDIS_URL: redis://redis:6379/0
@@ -70,8 +68,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - storage_data:/app/storage
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/inspections
       REDIS_URL: redis://redis:6379/0
@@ -88,17 +84,5 @@ services:
     deploy:
       replicas: 1
 
-  beat:
-    build: .
-    restart: unless-stopped
-    command: ["beat"]
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      REDIS_URL: redis://redis:6379/0
-      LOG_LEVEL: info
-
 volumes:
   pgdata:
-  storage_data:

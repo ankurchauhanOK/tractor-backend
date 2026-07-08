@@ -3,8 +3,20 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from datetime import datetime
 from app.models.database import get_db, Inspection
+from app.services.storage import storage
 
 router = APIRouter()
+
+
+_IMAGE_PATH_FIELDS = ("image_path_original", "image_path_enhanced", "ocr_json_path", "verified_json_path")
+
+
+def _enrich_image_urls(inspection: dict) -> dict:
+    for field in _IMAGE_PATH_FIELDS:
+        val = inspection.get(field)
+        if val:
+            inspection[field] = storage.get_url(val)
+    return inspection
 
 
 class DefectItem(BaseModel):
@@ -29,7 +41,7 @@ class UpdateInspection(BaseModel):
 @router.get("/entries")
 def list_entries(db: Session = Depends(get_db)):
     inspections = db.query(Inspection).order_by(Inspection.created_at.desc()).all()
-    return [i.to_dict() for i in inspections]
+    return [_enrich_image_urls(i.to_dict()) for i in inspections]
 
 
 @router.get("/entries/{entry_id}")
@@ -37,7 +49,7 @@ def get_entry(entry_id: int, db: Session = Depends(get_db)):
     inspection = db.query(Inspection).filter(Inspection.id == entry_id).first()
     if not inspection:
         raise HTTPException(status_code=404, detail="Entry not found")
-    return inspection.to_dict()
+    return _enrich_image_urls(inspection.to_dict())
 
 
 @router.put("/entries/{entry_id}")
@@ -72,7 +84,7 @@ def update_entry(entry_id: int, data: UpdateInspection, db: Session = Depends(ge
 
     db.commit()
     db.refresh(inspection)
-    return inspection.to_dict()
+    return _enrich_image_urls(inspection.to_dict())
 
 
 @router.delete("/entries/{entry_id}")

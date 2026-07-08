@@ -5,7 +5,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
 from app.config import REDIS_URL
@@ -40,11 +39,6 @@ app.include_router(export.router, prefix="/api", tags=["export"])
 app.include_router(speech.router, prefix="/api", tags=["speech"])
 app.include_router(batches.router, prefix="/api", tags=["batches"])
 app.include_router(analytics.router, prefix="/api", tags=["analytics"])
-
-uploads_dir = os.getenv("UPLOAD_DIR") or os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "uploads")
-os.makedirs(uploads_dir, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
-
 
 @app.get("/")
 def read_root():

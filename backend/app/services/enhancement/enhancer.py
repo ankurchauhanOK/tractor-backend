@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, Tuple
+from typing import Tuple
 
 import cv2
 import numpy as np
@@ -83,11 +83,4 @@ class ImageEnhancer:
         )
         return rotated, angle
 
-    def enhance_file(self, input_path: str, output_path: Optional[str] = None) -> Tuple[bytes, dict]:
-        with open(input_path, "rb") as f:
-            data = f.read()
-        enhanced, meta = self.enhance(data)
-        if output_path:
-            with open(output_path, "wb") as f:
-                f.write(enhanced)
-        return enhanced, meta
+

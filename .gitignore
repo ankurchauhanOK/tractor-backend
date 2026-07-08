@@ -31,9 +31,11 @@ dist/
 Thumbs.db
 
 # Project specific
-storage/
-uploads/
-exports/
+backend/storage/
+backend/uploads/
+/storage/
+/uploads/
+/exports/
 *.pickle
 *.onnx
 

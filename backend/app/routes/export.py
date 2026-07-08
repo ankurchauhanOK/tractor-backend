@@ -1,24 +1,21 @@
 import logging
-import os
 from datetime import datetime
+from io import BytesIO
 
 import pandas as pd
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends, HTTPException, StreamingResponse
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from app.config import STORAGE_DIR
 from app.models.database import Batch, Export, Inspection, get_db
 from app.services.export_service import generate_excel, generate_pdf
-from app.services.storage import LocalStorage
+from app.services.storage import storage
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
-storage = LocalStorage()
 
 
 class ExportRequest(BaseModel):
@@ -123,18 +120,18 @@ def download_export(
     filename = export.file_path.split("/")[-1] or f"export_{export_id}"
     media_type = media_types.get(export.file_type, "application/octet-stream")
 
-    return FileResponse(
-        path=export.file_path,
-        filename=filename,
+    data = storage.read_file_by_key(export.file_path)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Export file not found in storage")
+
+    return StreamingResponse(
+        iter([data]),
         media_type=media_type,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
 
 
 # ── Legacy: export all inspections (backward compat) ──────────
-
-EXPORT_DIR = os.path.join(STORAGE_DIR, "exports")
-os.makedirs(EXPORT_DIR, exist_ok=True)
-
 
 @router.get("/export")
 def export_all_excel(db: Session = Depends(get_db)):
@@ -158,9 +155,9 @@ def export_all_excel(db: Session = Depends(get_db)):
 
     df = pd.DataFrame(rows)
     filename = f"inspection_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-    filepath = os.path.join(EXPORT_DIR, filename)
 
-    with pd.ExcelWriter(filepath, engine="openpyxl") as writer:
+    buf = BytesIO()
+    with pd.ExcelWriter(buf, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Inspections")
         ws = writer.sheets["Inspections"]
 
@@ -189,8 +186,14 @@ def export_all_excel(db: Session = Depends(get_db)):
         ws.freeze_panes = "A2"
         ws.auto_filter.ref = ws.dimensions
 
-    return FileResponse(
-        path=filepath,
-        filename=filename,
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    buf.seek(0)
+    object_key = storage.save_export(filename, buf.getvalue())
+
+    data = storage.read_file_by_key(object_key)
+    media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+    return StreamingResponse(
+        iter([data]),
+        media_type=media_type,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )

@@ -36,11 +36,8 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 COPY . .
 
-RUN mkdir -p /app/storage /app/uploads
-
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    UPLOAD_DIR=/app/uploads \
     STORAGE_DIR=/app/storage
 
 EXPOSE 8000

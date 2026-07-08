@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 
 from sqlalchemy.exc import IntegrityError
-from app.config import MAX_PDF_PAGES
+from app.config import MAX_PDF_PAGES, MAX_UPLOAD_SIZE_MB
 from app.models.database import (
     Batch,
     BatchStatus,
@@ -16,17 +16,15 @@ from app.models.database import (
     get_db,
 )
 from app.services.pdf_splitter import PDFSplitter, PDFValidationError
-from app.services.storage import LocalStorage
+from app.services.storage import storage
 from app.utils import generate_batch_no
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
-storage = LocalStorage()
 splitter = PDFSplitter()
 
-MAX_PDF_SIZE_MB = 500
-MAX_PDF_SIZE_BYTES = MAX_PDF_SIZE_MB * 1024 * 1024
+MAX_PDF_SIZE_BYTES = MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
 
 def _enqueue_or_log(inspection_id: int, batch_id: int, page_number: int, db: Session):
@@ -65,7 +63,7 @@ async def upload_pdf(file: UploadFile = File(...), db: Session = Depends(get_db)
     if len(contents) > MAX_PDF_SIZE_BYTES:
         raise HTTPException(
             status_code=413,
-            detail=f"PDF exceeds {MAX_PDF_SIZE_MB} MB limit",
+            detail=f"PDF exceeds {MAX_UPLOAD_SIZE_MB} MB limit",
         )
 
     # Validate PDF structure (encrypted, zero pages, dimensions, corruption)

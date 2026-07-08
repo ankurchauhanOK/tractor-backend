@@ -9,13 +9,12 @@ from sqlalchemy.orm import Session
 
 from sqlalchemy.exc import IntegrityError
 from app.models.database import Batch, BatchStatus, get_db
-from app.services.storage import LocalStorage
+from app.services.storage import storage
 from app.utils import generate_batch_no
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
-storage = LocalStorage()
 
 
 # ── Request / Response models ─────────────────────────────────────
