@@ -39,3 +39,4 @@ exports/
 
 # Logs
 *.log
+inspection.db
