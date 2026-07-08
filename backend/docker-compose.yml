@@ -1,0 +1,104 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: inspections
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  app:
+    build: .
+    restart: unless-stopped
+    command: ["api"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - storage_data:/app/storage
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/inspections
+      REDIS_URL: redis://redis:6379/0
+      WORKER_COUNT: "8"
+      PDF_DPI: "300"
+      MAX_PDF_PAGES: "500"
+      LOG_LEVEL: info
+      UVICORN_WORKERS: "4"
+      OCR_VERSION: paddleocr-3.7.0
+      AI_VERSION: mahindra-ai-v1.0
+      IMAGE_PIPELINE_VERSION: img-enhance-v1.0
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; r=urllib.request.urlopen('http://localhost:8000/health'); assert r.status == 200"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+  worker:
+    build: .
+    restart: unless-stopped
+    command: ["worker"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - storage_data:/app/storage
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/inspections
+      REDIS_URL: redis://redis:6379/0
+      WORKER_COUNT: "8"
+      PDF_DPI: "300"
+      MAX_PDF_PAGES: "500"
+      LOG_LEVEL: info
+      CELERY_QUEUES: default,ocr
+      CELERY_MAX_TASKS: "1000"
+      CELERY_MAX_MEMORY: "500000"
+      OCR_VERSION: paddleocr-3.7.0
+      AI_VERSION: mahindra-ai-v1.0
+      IMAGE_PIPELINE_VERSION: img-enhance-v1.0
+    deploy:
+      replicas: 1
+
+  beat:
+    build: .
+    restart: unless-stopped
+    command: ["beat"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: info
+
+volumes:
+  pgdata:
+  storage_data:

@@ -1,0 +1,78 @@
+import os
+from datetime import datetime
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
+
+from app.config import REDIS_URL
+from app.models.database import engine, init_db
+
+init_db()
+
+app = FastAPI(title="Tractor Inspection OCR System")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "https://tractor-inspection-ocr.vercel.app",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+from app.routes import upload, entries, export, speech, batches, analytics
+
+app.include_router(upload.router, prefix="/api", tags=["upload"])
+app.include_router(entries.router, prefix="/api", tags=["entries"])
+app.include_router(export.router, prefix="/api", tags=["export"])
+app.include_router(speech.router, prefix="/api", tags=["speech"])
+app.include_router(batches.router, prefix="/api", tags=["batches"])
+app.include_router(analytics.router, prefix="/api", tags=["analytics"])
+
+uploads_dir = os.getenv("UPLOAD_DIR") or os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "uploads")
+os.makedirs(uploads_dir, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+
+
+@app.get("/")
+def read_root():
+    return {"message": "Tractor Inspection OCR System API"}
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
+
+
+@app.get("/ready")
+def ready():
+    checks = {"database": False, "redis": False}
+
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        checks["database"] = True
+    except Exception as e:
+        checks["database_error"] = str(e)
+
+    try:
+        from redis import Redis
+        r = Redis.from_url(REDIS_URL)
+        r.ping()
+        r.close()
+        checks["redis"] = True
+    except Exception as e:
+        checks["redis_error"] = str(e)
+
+    all_ok = checks["database"] and checks["redis"]
+    status_code = 200 if all_ok else 503
+    from fastapi.responses import JSONResponse
+    return JSONResponse(
+        content={"status": "ok" if all_ok else "unavailable", **checks},
+        status_code=status_code,
+    )

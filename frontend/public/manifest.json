@@ -1,0 +1,23 @@
+{
+  "name": "AI Inspection Assistant",
+  "short_name": "AI Inspection",
+  "description": "Digitize inspection sheets in seconds using AI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F8F8",
+  "theme_color": "#D97706",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

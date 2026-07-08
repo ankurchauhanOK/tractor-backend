@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+inspection.db
+.git
+.gitignore
+scripts/
+*.md
+storage/
+uploads/
+*.pkl
+*.onnx
