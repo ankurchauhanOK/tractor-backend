@@ -56,14 +56,7 @@ elif [ "$MODE" = "worker" ]; then
     --without-gossip \
     --without-mingle
 
-elif [ "$MODE" = "beat" ]; then
-  wait_for_redis
-  exec celery -A app.celery_app beat \
-    -l "${LOG_LEVEL:-info}" \
-    --pidfile=/tmp/celerybeat.pid \
-    --schedule=/tmp/celerybeat-schedule
-
 else
-  echo "Unknown mode: $MODE (use: api, worker, beat)"
+  echo "Unknown mode: $MODE (use: api, worker)"
   exit 1
 fi
