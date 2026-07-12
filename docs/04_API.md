@@ -17,22 +17,22 @@ List batches with pagination and filters.
 - Returns: `{total, page, page_size, total_pages, batches[]}`
 
 ### POST /batches
-Create batch manually. Body: `{operator, scanner_name, ...}`
+Create batch manually. Body: `{operator, scanner_name, factory_name, plant_name, line_name, ...}`
 
 ### GET /batches/{id}
-Get batch detail with storage info.
+Get batch detail with storage info and metadata.
 
 ### PUT /batches/{id}
-Update batch fields. Body: partial Batch fields.
+Update batch fields. Body: partial Batch fields (operator, scanner_name, factory_name, etc.).
 
 ### GET /batches/{id}/summary
-Compact batch summary (processed, verified, failed counts).
+Compact batch summary (processed, verified, failed, review counts, confidence).
 
 ### POST /batches/{id}/archive
-Soft-delete batch. Requires not locked.
+Soft-delete batch. Requires not locked. Body: `{deleted_by}` (optional)
 
 ### POST /batches/{id}/restore
-Restore archived batch.
+Restore archived batch. Body: `{restored_by}` (optional)
 
 ### POST /batches/{id}/lock
 Lock batch for exclusive access. Body: `{locked_by}`
@@ -41,7 +41,7 @@ Lock batch for exclusive access. Body: `{locked_by}`
 Unlock batch. Body: `{locked_by}` (optional)
 
 ### GET /batches/{id}/size
-Storage size for batch images/files.
+Storage size for batch images/files. Returns `{total_size_bytes, original_pdf_size, page_images_size, ...}`
 
 ## Entries (Inspections)
 
@@ -69,7 +69,12 @@ List exports for a batch.
 Download export file.
 
 ### GET /export (legacy)
-Export all inspections as XLSX.
+Export all inspections as XLSX. No batch_id required — returns full dataset.
+
+## Entries (Inspections) — Additional
+
+### POST /entries
+Create a new inspection manually. Body: partial Inspection fields minus batch-scoped IDs.
 
 ## Analytics
 

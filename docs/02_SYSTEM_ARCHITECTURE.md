@@ -29,12 +29,12 @@
 - Indexed on status, created_at, batch_no
 
 ### OCR Pipeline
-1. PDF split → page images (PyMuPDF)
-2. Image enhancement (OpenCV: deskew, denoise, contrast, sharpen)
-3. OCR via PaddleOCR (PaddleX API)
-4. Field extraction via regex patterns and Zonal OCR
+1. PDF split → page images (PyMuPDF @ 300 DPI)
+2. Image enhancement (OpenCV: grayscale, denoise, deskew, CLAHE, Otsu binarization)
+3. OCR via PaddleOCR with EasyOCR fallback
+4. Field extraction via regex patterns
 5. Confidence scoring per field
-6. Duplicate detection (SHA256 + cosine similarity)
+6. Duplicate detection (SHA256 + exact field matching)
 
 ### Task Queue (Celery + Redis)
 - async OCR processing

@@ -53,6 +53,16 @@ SKIP_LABELS = {
     "engine no:", "chassis no:", "shift :", "line no :",
     "section a:", "section b:", "section c:",
     "tractor details", "defects found:", "remarks / signature",
+    # Mahindra form specific
+    "mahindra", "rise", "mochine", "c5", "un",
+    "bigm", "btatus", "check pornte", "siom", "status",
+    "check points", "defect details", "shortages (any)",
+    "sr. no.", "defect description", "repaireo by", "final verified by",
+    "road testing", "hydraulic tebjing", "underbody", "toe in betth",
+    "leakagecheck", "electrical check", "paint check", "bumperfitment",
+    "opcs", "other remarkà", "new rnspection",
+    "reartyre tracinglh", "rear tyre tracing rh",
+    "rev. no", "rev. ot", "format",
 }
 
 SKIP_PATTERNS = [

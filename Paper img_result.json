@@ -1,0 +1,1134 @@
+{
+  "enhancement": {
+    "steps": [
+      "grayscale",
+      "denoise",
+      "clahe",
+      "otsu_binarize"
+    ],
+    "original_size": 133707,
+    "enhanced_size": 58361,
+    "skew_angle": 0.0,
+    "size_reduction_pct": 56.4
+  },
+  "ocr": {
+    "raw_text": "Mahindra\nTRACTOR INSPECTION SHEET\nSR NO.ISHEET NO.\nRise\nTRACTOR NO. JIDENTIFIER\nDATE\nSHFT\nLINE I STAGE\n071107.6076\n001\nA\nB\nC\nmochine\nc5\nUN\nCHECK POINTS\nBIGM\nBTATUS\nCHECK PORNTE\nSIOM\nSTATUS\nROAD TESTING\nHYDRAULIC TEBJING\nTrach : Portormanco 'Nose/ Vorsten ec 1\n(ln : Pte/ Rmoe a)\nUNDERBODY\nTOE IN BETTH\n(lnspect\u00e1n as per S0p)\n(As per soecdcason)\nLEAKAGECHECK\nELECTRICAL CHECK\n(Enguna / Tranamisson / Hydaaude ec\n(Lights / indcatiora s Hom / Gaugcn c\nPAINT CHECK\nBUMPERFITMENT\n(As pet paim SOP1\n(Aa par spoc\u00dfcmmn)\nOPCS\nOTHER REMARK\u00e0 (n Any)\nNEW RNSPECTION\nREARTYRE TRACINGLH\nREAR TYRE TRACING RH\nDEFECT DETAILS (ee cly O et)\nSR. NO.\nDEFECT DESCRIPTION\nREPAIREO BY\nFINAL VERIFIED BY\n1.\nFront\nBonut Dent.\n2\nTank\nPipe\nBeat.\n1\nRPM\nLow\n7.\n10.\n12.\n2\n14.\n\u94f6\nSHORTAGES (Any)\n1.\n2.\nS. NO.\nPART HAME / DESCRIPTION\n5TAGE/LOCATION\nCHANGE DESCRIPTION\nCHECKED BY\n1.\n2\nREV. NO. 01\nREV. OT 01-01-2024\nFORMAT: (Soll Conilicatlan-01)",
+    "confidence": 0.8831,
+    "processing_time_ms": 54755,
+    "engine": "PaddleOCR",
+    "word_count": 77,
+    "words": [
+      {
+        "text": "Mahindra",
+        "confidence": 0.9013,
+        "bbox": [
+          54,
+          37,
+          204,
+          39,
+          204,
+          64,
+          54,
+          62
+        ]
+      },
+      {
+        "text": "TRACTOR INSPECTION SHEET",
+        "confidence": 0.9997,
+        "bbox": [
+          311,
+          48,
+          670,
+          48,
+          670,
+          75,
+          311,
+          75
+        ]
+      },
+      {
+        "text": "SR NO.ISHEET NO.",
+        "confidence": 0.9295,
+        "bbox": [
+          768,
+          41,
+          881,
+          37,
+          881,
+          50,
+          768,
+          54
+        ]
+      },
+      {
+        "text": "Rise",
+        "confidence": 0.9989,
+        "bbox": [
+          166,
+          61,
+          205,
+          63,
+          204,
+          82,
+          165,
+          80
+        ]
+      },
+      {
+        "text": "TRACTOR NO. JIDENTIFIER",
+        "confidence": 0.9777,
+        "bbox": [
+          58,
+          96,
+          207,
+          101,
+          207,
+          118,
+          58,
+          113
+        ]
+      },
+      {
+        "text": "DATE",
+        "confidence": 0.9996,
+        "bbox": [
+          337,
+          104,
+          370,
+          104,
+          370,
+          119,
+          337,
+          119
+        ]
+      },
+      {
+        "text": "SHFT",
+        "confidence": 0.9804,
+        "bbox": [
+          515,
+          106,
+          552,
+          106,
+          552,
+          120,
+          515,
+          120
+        ]
+      },
+      {
+        "text": "LINE I STAGE",
+        "confidence": 0.9521,
+        "bbox": [
+          743,
+          102,
+          815,
+          102,
+          815,
+          116,
+          743,
+          116
+        ]
+      },
+      {
+        "text": "071107.6076",
+        "confidence": 0.7092,
+        "bbox": [
+          338,
+          119,
+          483,
+          121,
+          483,
+          143,
+          338,
+          141
+        ]
+      },
+      {
+        "text": "001",
+        "confidence": 0.9966,
+        "bbox": [
+          76,
+          130,
+          148,
+          130,
+          148,
+          152,
+          76,
+          152
+        ]
+      },
+      {
+        "text": "A",
+        "confidence": 0.9744,
+        "bbox": [
+          543,
+          130,
+          557,
+          130,
+          557,
+          143,
+          543,
+          143
+        ]
+      },
+      {
+        "text": "B",
+        "confidence": 0.8427,
+        "bbox": [
+          604,
+          128,
+          618,
+          128,
+          618,
+          143,
+          604,
+          143
+        ]
+      },
+      {
+        "text": "C",
+        "confidence": 0.5374,
+        "bbox": [
+          665,
+          128,
+          679,
+          128,
+          679,
+          143,
+          665,
+          143
+        ]
+      },
+      {
+        "text": "mochine",
+        "confidence": 0.9362,
+        "bbox": [
+          745,
+          121,
+          845,
+          119,
+          845,
+          144,
+          745,
+          146
+        ]
+      },
+      {
+        "text": "c5",
+        "confidence": 0.6116,
+        "bbox": [
+          351,
+          145,
+          368,
+          145,
+          368,
+          158,
+          351,
+          158
+        ]
+      },
+      {
+        "text": "UN",
+        "confidence": 0.5057,
+        "bbox": [
+          400,
+          146,
+          420,
+          146,
+          420,
+          158,
+          400,
+          158
+        ]
+      },
+      {
+        "text": "CHECK POINTS",
+        "confidence": 0.9883,
+        "bbox": [
+          53,
+          170,
+          138,
+          173,
+          138,
+          187,
+          53,
+          184
+        ]
+      },
+      {
+        "text": "BIGM",
+        "confidence": 0.8937,
+        "bbox": [
+          345,
+          172,
+          374,
+          174,
+          373,
+          190,
+          344,
+          188
+        ]
+      },
+      {
+        "text": "BTATUS",
+        "confidence": 0.88,
+        "bbox": [
+          412,
+          175,
+          454,
+          175,
+          454,
+          189,
+          412,
+          189
+        ]
+      },
+      {
+        "text": "CHECK PORNTE",
+        "confidence": 0.9627,
+        "bbox": [
+          484,
+          175,
+          564,
+          175,
+          564,
+          189,
+          484,
+          189
+        ]
+      },
+      {
+        "text": "SIOM",
+        "confidence": 0.6745,
+        "bbox": [
+          775,
+          174,
+          803,
+          174,
+          803,
+          187,
+          775,
+          187
+        ]
+      },
+      {
+        "text": "STATUS",
+        "confidence": 0.927,
+        "bbox": [
+          840,
+          173,
+          883,
+          173,
+          883,
+          187,
+          840,
+          187
+        ]
+      },
+      {
+        "text": "ROAD TESTING",
+        "confidence": 0.9971,
+        "bbox": [
+          54,
+          192,
+          136,
+          195,
+          136,
+          209,
+          54,
+          206
+        ]
+      },
+      {
+        "text": "HYDRAULIC TEBJING",
+        "confidence": 0.986,
+        "bbox": [
+          484,
+          197,
+          591,
+          197,
+          591,
+          210,
+          484,
+          210
+        ]
+      },
+      {
+        "text": "Trach : Portormanco 'Nose/ Vorsten ec 1",
+        "confidence": 0.7437,
+        "bbox": [
+          54,
+          207,
+          242,
+          211,
+          242,
+          225,
+          54,
+          221
+        ]
+      },
+      {
+        "text": "(ln : Pte/ Rmoe a)",
+        "confidence": 0.5497,
+        "bbox": [
+          483,
+          210,
+          619,
+          211,
+          619,
+          225,
+          483,
+          224
+        ]
+      },
+      {
+        "text": "UNDERBODY",
+        "confidence": 0.9993,
+        "bbox": [
+          54,
+          230,
+          126,
+          232,
+          126,
+          246,
+          54,
+          244
+        ]
+      },
+      {
+        "text": "TOE IN BETTH",
+        "confidence": 0.8818,
+        "bbox": [
+          485,
+          233,
+          566,
+          233,
+          566,
+          246,
+          485,
+          246
+        ]
+      },
+      {
+        "text": "(lnspect\u00e1n as per S0p)",
+        "confidence": 0.7119,
+        "bbox": [
+          54,
+          245,
+          163,
+          248,
+          163,
+          262,
+          54,
+          259
+        ]
+      },
+      {
+        "text": "(As per soecdcason)",
+        "confidence": 0.7572,
+        "bbox": [
+          484,
+          248,
+          576,
+          248,
+          576,
+          261,
+          484,
+          261
+        ]
+      },
+      {
+        "text": "LEAKAGECHECK",
+        "confidence": 0.999,
+        "bbox": [
+          55,
+          267,
+          149,
+          271,
+          149,
+          285,
+          55,
+          281
+        ]
+      },
+      {
+        "text": "ELECTRICAL CHECK",
+        "confidence": 0.9886,
+        "bbox": [
+          483,
+          269,
+          589,
+          270,
+          589,
+          284,
+          483,
+          283
+        ]
+      },
+      {
+        "text": "(Enguna / Tranamisson / Hydaaude ec",
+        "confidence": 0.736,
+        "bbox": [
+          54,
+          282,
+          221,
+          285,
+          221,
+          299,
+          54,
+          296
+        ]
+      },
+      {
+        "text": "(Lights / indcatiora s Hom / Gaugcn c",
+        "confidence": 0.6661,
+        "bbox": [
+          484,
+          285,
+          655,
+          285,
+          655,
+          298,
+          484,
+          298
+        ]
+      },
+      {
+        "text": "PAINT CHECK",
+        "confidence": 0.9985,
+        "bbox": [
+          55,
+          305,
+          130,
+          308,
+          130,
+          321,
+          55,
+          318
+        ]
+      },
+      {
+        "text": "BUMPERFITMENT",
+        "confidence": 0.8955,
+        "bbox": [
+          483,
+          306,
+          575,
+          307,
+          575,
+          321,
+          483,
+          320
+        ]
+      },
+      {
+        "text": "(As pet paim SOP1",
+        "confidence": 0.8523,
+        "bbox": [
+          55,
+          320,
+          144,
+          322,
+          144,
+          335,
+          55,
+          333
+        ]
+      },
+      {
+        "text": "(Aa par spoc\u00dfcmmn)",
+        "confidence": 0.7715,
+        "bbox": [
+          484,
+          321,
+          575,
+          321,
+          575,
+          334,
+          484,
+          334
+        ]
+      },
+      {
+        "text": "OPCS",
+        "confidence": 0.931,
+        "bbox": [
+          57,
+          342,
+          92,
+          342,
+          92,
+          357,
+          57,
+          357
+        ]
+      },
+      {
+        "text": "OTHER REMARK\u00e0 (n Any)",
+        "confidence": 0.8392,
+        "bbox": [
+          483,
+          347,
+          612,
+          348,
+          612,
+          362,
+          483,
+          361
+        ]
+      },
+      {
+        "text": "NEW RNSPECTION",
+        "confidence": 0.9454,
+        "bbox": [
+          56,
+          382,
+          149,
+          383,
+          149,
+          397,
+          56,
+          396
+        ]
+      },
+      {
+        "text": "REARTYRE TRACINGLH",
+        "confidence": 0.987,
+        "bbox": [
+          190,
+          458,
+          324,
+          458,
+          324,
+          471,
+          190,
+          471
+        ]
+      },
+      {
+        "text": "REAR TYRE TRACING RH",
+        "confidence": 0.9956,
+        "bbox": [
+          610,
+          459,
+          746,
+          460,
+          746,
+          474,
+          610,
+          473
+        ]
+      },
+      {
+        "text": "DEFECT DETAILS (ee cly O et)",
+        "confidence": 0.7748,
+        "bbox": [
+          338,
+          580,
+          611,
+          585,
+          611,
+          602,
+          338,
+          597
+        ]
+      },
+      {
+        "text": "SR. NO.",
+        "confidence": 0.8229,
+        "bbox": [
+          59,
+          608,
+          100,
+          608,
+          100,
+          622,
+          59,
+          622
+        ]
+      },
+      {
+        "text": "DEFECT DESCRIPTION",
+        "confidence": 0.95,
+        "bbox": [
+          300,
+          609,
+          418,
+          609,
+          418,
+          623,
+          300,
+          623
+        ]
+      },
+      {
+        "text": "REPAIREO BY",
+        "confidence": 0.9464,
+        "bbox": [
+          656,
+          613,
+          729,
+          613,
+          729,
+          624,
+          656,
+          624
+        ]
+      },
+      {
+        "text": "FINAL VERIFIED BY",
+        "confidence": 0.9863,
+        "bbox": [
+          776,
+          613,
+          883,
+          613,
+          883,
+          626,
+          776,
+          626
+        ]
+      },
+      {
+        "text": "1.",
+        "confidence": 0.8774,
+        "bbox": [
+          74,
+          638,
+          84,
+          638,
+          84,
+          649,
+          74,
+          649
+        ]
+      },
+      {
+        "text": "Front",
+        "confidence": 0.9989,
+        "bbox": [
+          162,
+          631,
+          242,
+          631,
+          242,
+          656,
+          162,
+          656
+        ]
+      },
+      {
+        "text": "Bonut Dent.",
+        "confidence": 0.9839,
+        "bbox": [
+          243,
+          631,
+          448,
+          628,
+          448,
+          655,
+          243,
+          658
+        ]
+      },
+      {
+        "text": "2",
+        "confidence": 0.9716,
+        "bbox": [
+          73,
+          666,
+          86,
+          666,
+          86,
+          679,
+          73,
+          679
+        ]
+      },
+      {
+        "text": "Tank",
+        "confidence": 0.9744,
+        "bbox": [
+          146,
+          664,
+          223,
+          664,
+          223,
+          693,
+          146,
+          693
+        ]
+      },
+      {
+        "text": "Pipe",
+        "confidence": 0.9933,
+        "bbox": [
+          244,
+          663,
+          328,
+          663,
+          328,
+          695,
+          244,
+          695
+        ]
+      },
+      {
+        "text": "Beat.",
+        "confidence": 0.9844,
+        "bbox": [
+          326,
+          661,
+          446,
+          658,
+          447,
+          690,
+          327,
+          693
+        ]
+      },
+      {
+        "text": "1",
+        "confidence": 0.9894,
+        "bbox": [
+          72,
+          695,
+          85,
+          695,
+          85,
+          708,
+          72,
+          708
+        ]
+      },
+      {
+        "text": "RPM",
+        "confidence": 0.9943,
+        "bbox": [
+          155,
+          690,
+          224,
+          692,
+          223,
+          722,
+          154,
+          720
+        ]
+      },
+      {
+        "text": "Low",
+        "confidence": 0.6926,
+        "bbox": [
+          244,
+          691,
+          312,
+          691,
+          312,
+          720,
+          244,
+          720
+        ]
+      },
+      {
+        "text": "7.",
+        "confidence": 0.8964,
+        "bbox": [
+          71,
+          812,
+          81,
+          812,
+          81,
+          823,
+          71,
+          823
+        ]
+      },
+      {
+        "text": "10.",
+        "confidence": 0.8109,
+        "bbox": [
+          66,
+          897,
+          83,
+          897,
+          83,
+          911,
+          66,
+          911
+        ]
+      },
+      {
+        "text": "12.",
+        "confidence": 0.9812,
+        "bbox": [
+          65,
+          928,
+          81,
+          928,
+          81,
+          941,
+          65,
+          941
+        ]
+      },
+      {
+        "text": "2",
+        "confidence": 0.2492,
+        "bbox": [
+          64,
+          958,
+          80,
+          958,
+          80,
+          971,
+          64,
+          971
+        ]
+      },
+      {
+        "text": "14.",
+        "confidence": 0.9968,
+        "bbox": [
+          63,
+          987,
+          79,
+          987,
+          79,
+          1001,
+          63,
+          1001
+        ]
+      },
+      {
+        "text": "\u94f6",
+        "confidence": 0.4092,
+        "bbox": [
+          62,
+          1015,
+          78,
+          1015,
+          78,
+          1028,
+          62,
+          1028
+        ]
+      },
+      {
+        "text": "SHORTAGES (Any)",
+        "confidence": 0.9237,
+        "bbox": [
+          399,
+          1057,
+          528,
+          1059,
+          528,
+          1076,
+          399,
+          1074
+        ]
+      },
+      {
+        "text": "1.",
+        "confidence": 0.9973,
+        "bbox": [
+          59,
+          1078,
+          72,
+          1078,
+          72,
+          1092,
+          59,
+          1092
+        ]
+      },
+      {
+        "text": "2.",
+        "confidence": 0.9887,
+        "bbox": [
+          59,
+          1104,
+          73,
+          1104,
+          73,
+          1120,
+          59,
+          1120
+        ]
+      },
+      {
+        "text": "S. NO.",
+        "confidence": 0.9303,
+        "bbox": [
+          46,
+          1139,
+          83,
+          1139,
+          83,
+          1154,
+          46,
+          1154
+        ]
+      },
+      {
+        "text": "PART HAME / DESCRIPTION",
+        "confidence": 0.9503,
+        "bbox": [
+          148,
+          1139,
+          297,
+          1141,
+          297,
+          1155,
+          148,
+          1153
+        ]
+      },
+      {
+        "text": "5TAGE/LOCATION",
+        "confidence": 0.9559,
+        "bbox": [
+          393,
+          1142,
+          495,
+          1144,
+          495,
+          1157,
+          393,
+          1155
+        ]
+      },
+      {
+        "text": "CHANGE DESCRIPTION",
+        "confidence": 0.9873,
+        "bbox": [
+          586,
+          1145,
+          713,
+          1148,
+          713,
+          1162,
+          586,
+          1159
+        ]
+      },
+      {
+        "text": "CHECKED BY",
+        "confidence": 0.9875,
+        "bbox": [
+          796,
+          1150,
+          873,
+          1152,
+          873,
+          1165,
+          796,
+          1163
+        ]
+      },
+      {
+        "text": "1.",
+        "confidence": 0.7486,
+        "bbox": [
+          57,
+          1162,
+          74,
+          1162,
+          74,
+          1180,
+          57,
+          1180
+        ]
+      },
+      {
+        "text": "2",
+        "confidence": 0.998,
+        "bbox": [
+          57,
+          1193,
+          72,
+          1193,
+          72,
+          1208,
+          57,
+          1208
+        ]
+      },
+      {
+        "text": "REV. NO. 01",
+        "confidence": 0.9634,
+        "bbox": [
+          36,
+          1227,
+          109,
+          1227,
+          109,
+          1241,
+          36,
+          1241
+        ]
+      },
+      {
+        "text": "REV. OT 01-01-2024",
+        "confidence": 0.9597,
+        "bbox": [
+          35,
+          1242,
+          151,
+          1242,
+          151,
+          1256,
+          35,
+          1256
+        ]
+      },
+      {
+        "text": "FORMAT: (Soll Conilicatlan-01)",
+        "confidence": 0.9137,
+        "bbox": [
+          716,
+          1250,
+          892,
+          1257,
+          892,
+          1274,
+          716,
+          1267
+        ]
+      }
+    ]
+  },
+  "extracted": {
+    "tractor_no": "",
+    "tractor_model": "",
+    "engine_no": "",
+    "chassis_no": "",
+    "inspector": "",
+    "date": null,
+    "shift": "",
+    "line_no": "",
+    "defects": [
+      {
+        "text": "Front Bonut Dent.",
+        "verified": false
+      },
+      {
+        "text": "Tank Pipe Beat.",
+        "verified": false
+      },
+      {
+        "text": "RPM Low",
+        "verified": false
+      }
+    ],
+    "needs_review": true,
+    "confidence_scores": {
+      "tractor_no": 0.44156106648507054,
+      "engine_no": 0.44156106648507054,
+      "chassis_no": 0.44156106648507054,
+      "inspector": 0.2649366398910423,
+      "date": 0.2649366398910423,
+      "dif": 0.8831221329701411
+    }
+  }
+}

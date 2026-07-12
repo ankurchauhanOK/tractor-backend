@@ -28,11 +28,33 @@
 ### Environment Variables
 See `docs/06_DEPLOYMENT.md` for full table.
 
+### Frontend Pages
+| Page | Route | Status |
+|------|-------|--------|
+| Login | `/login` | ✅ Simulated auth (no real API call) |
+| Dashboard | `/` | ✅ KPI cards, recent inspections, actions |
+| Upload | `/upload` | ✅ Drag-and-drop + camera capture |
+| Review Queue | `/review` | ✅ Status filters, search, entry list |
+| Batches | `/batches` | ✅ Paginated list with filters/sorting |
+| Batch Detail | `/batches/[id]` | ✅ Stats, entries table, export/archive |
+| Verify Inspection | `/verify/[id]` | ✅ Image viewer, defect editing, voice input |
+| Analytics | `/analytics` | ✅ Charts, trends, factory comparison |
+| Reports | `/reports` | ✅ Export management with download links |
+| Settings | `/settings` | ✅ 10 sections (Profile, Factories, Users, etc.) |
+
+### Database Tables
+| Table | Status |
+|-------|--------|
+| batches, inspections, exports, system_events, duplicate_log | ✅ Documented |
+| defect_library, correction_log, learning_entries | ✅ Exist in code but undocumented |
+
 ### Known Issues
 - CORS origins need Render URL added via `CORS_ORIGINS` env var
 - Render Disk mounted at /app/storage for persistence
 - First Docker build takes ~5-10 mins (PaddleOCR deps are large)
-- No authentication layer yet; SECRET_KEY placeholder only
+- No authentication layer yet; SECRET_KEY is defined but never read by any code
+- Frontend review page links to `/review/{id}` but route file does not exist (404)
+- Sharpening, zonal OCR, RapidFuzz, and cosine similarity documented but not implemented
 
 ## Git
 - Remote: https://github.com/ankurChauhanOK/tractor-backend

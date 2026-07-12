@@ -1,12 +1,13 @@
 import logging
-from datetime import datetime
+import re
+from datetime import date, datetime
 from functools import lru_cache
 from typing import Optional
 
 from sqlalchemy.orm import Session
 
 from app.celery_app import celery_app
-from app.config import AI_VERSION, IMAGE_PIPELINE_VERSION, OCR_VERSION
+from app.config import AI_VERSION, IMAGE_PIPELINE_VERSION, OCR_VERSION, VISION_PIPELINE_ENABLED
 from app.models.database import (
     Batch,
     BatchStatus,
@@ -39,6 +40,33 @@ def get_ocr_service():
 def get_extraction():
     from app.services.extraction.engine import ExtractionEngine
     return ExtractionEngine()
+
+
+@lru_cache(maxsize=1)
+def get_vision_pipeline():
+    from app.services.vision.pipeline import VisionPipeline
+    return VisionPipeline()
+
+
+_DATE_PARSE = re.compile(r"(\d{2,4})[-/](\d{1,2})[-/](\d{2,4})")
+
+
+def _parse_date(raw: str) -> Optional[date]:
+    if not raw:
+        return None
+    m = _DATE_PARSE.search(raw)
+    if not m:
+        return None
+    try:
+        parts = [int(g) for g in m.groups()]
+        y, mo, d = parts
+        if y < 100:
+            y += 2000
+        if y > 31:
+            return date(y, mo, d)
+        return date(d, mo, y) if d > 12 else date(y, mo, d)
+    except (ValueError, IndexError):
+        return None
 
 
 def _update_batch_summaries(batch_id: int, db: Session):
@@ -164,18 +192,60 @@ def process_page(self, inspection_id: int):
                 f"page {inspection.page_number}"
             )
 
-        # 2. Enhance image
+        # 1a. Vision AI Pipeline (when enabled)
+        if VISION_PIPELINE_ENABLED:
+            vision = get_vision_pipeline()
+            vision_result = vision.process(orig_bytes)
+
+            from app.models.enums import AIProvider
+
+            inspection.tractor_no = vision_result.tractor_no
+            inspection.date = _parse_date(vision_result.date)
+            inspection.shift = vision_result.shift
+            inspection.line_no = vision_result.line_no
+            inspection.defects = vision_result.defects
+            inspection.confidence_scores = vision_result.confidence_scores
+            inspection.needs_review = vision_result.needs_review
+            inspection.ai_version = f"vision-{vision_result.provider_used}"
+
+            inspection.status = InspectionStatus.OCR_COMPLETED.value
+            inspection.updated_at = datetime.utcnow()
+            db.commit()
+
+            _log_event(
+                db, inspection.batch_id, EventType.OCR_COMPLETED,
+                inspection_id=inspection.id,
+                details={
+                    "page_number": inspection.page_number,
+                    "pipeline": "vision",
+                    "provider": vision_result.provider_used,
+                    "needs_review": vision_result.needs_review,
+                },
+            )
+
+            _update_batch_summaries(inspection.batch_id, db)
+            logger.info(
+                "Page %d/%d processed via Vision: review=%s, scores=%s",
+                inspection.page_number,
+                batch.total_pages if batch else 0,
+                vision_result.needs_review,
+                vision_result.confidence_scores,
+            )
+            return
+
+        # 2. (Legacy) Enhance image
         enhanced_bytes, enhance_meta = get_enhancer().enhance(orig_bytes)
         storage.save_enhanced(batch.batch_no, inspection.page_number, enhanced_bytes)
 
-        # 3. Run OCR on enhanced image
+        # 3. (Legacy) Run OCR on enhanced image
         ocr_result = get_ocr_service().process_bytes(enhanced_bytes)
 
         # Save OCR JSON to storage
         storage.save_ocr_json(batch.batch_no, inspection.page_number, ocr_result.to_dict())
 
-        # 4. Extract structured fields
-        extracted = get_extraction().extract(ocr_result.raw_text, ocr_result.confidence)
+        # 4. (Legacy) Extract structured fields
+        word_dicts = [w.to_dict() for w in ocr_result.words]
+        extracted = get_extraction().extract(ocr_result.raw_text, word_dicts, ocr_result.confidence, enhanced_bytes)
 
         # 5. Check for duplicates
         dup_info = get_extraction().check_duplicate(

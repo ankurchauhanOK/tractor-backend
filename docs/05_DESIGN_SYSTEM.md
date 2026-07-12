@@ -1,66 +1,28 @@
-# AI-Powered Factory Inspection Digitization Platform
+# Design System
 
-## Vision
-Eliminate manual data entry from factory inspection sheets using AI-powered OCR, enabling real-time quality tracking, analytics, and paperless operations across manufacturing plants.
+## UI Framework
+- **Next.js 16** with App Router
+- **React 19**
+- **Tailwind CSS v4** for styling
+- **shadcn/ui** components (built on `@base-ui/react`)
+- **next-themes** for dark/light mode
+- **sonner** for toast notifications
 
-## Core Objective
-Digitize handwritten/printed inspection sheets in under 8 minutes per 500-page batch with 96%+ OCR accuracy and 95%+ auto-approval rate.
+## Layout
+- **Desktop**: Sidebar navigation (7 items) + main content area
+- **Mobile**: Bottom navigation bar (5 items) + collapsible header
+- **PWA**: Offline support via `@serwist/next`, install prompt component
 
-## Key Stakeholders
-- **Factory Inspectors** — upload sheets, review AI results, verify defects
-- **Quality Managers** — monitor batch metrics, trends, factory comparisons
-- **Engineers** — configure OCR pipelines, export reports, maintain system
-# AI Pipeline
+## Core Pages & Components
+| Component | Description |
+|-----------|-------------|
+| `app-shell.tsx` | Main layout wrapper with sidebar + mobile nav |
+| `sidebar.tsx` | Desktop sidebar nav |
+| `mobile-nav.tsx` | Mobile bottom nav |
+| `camera-capture.tsx` | Mobile camera capture for upload |
+| `VoiceInput.tsx` | Speech-to-text input for hands-free data entry |
+| `InstallPrompt.tsx` | PWA install banner |
+| `PwaStatus.tsx` | Online/offline status indicator |
 
-## Flow
-
-```
-PDF Upload
-    ↓
-PDF Splitter (PyMuPDF) → Individual page images
-    ↓
-Image Enhancer (OpenCV)
-    ├── Grayscale conversion
-    ├── Binarization (OTSU threshold)
-    ├── Deskew (Hough transform)
-    ├── Denoise (Non-local means)
-    ├── Contrast enhancement (CLAHE)
-    └── Sharpening (unsharp mask)
-    ↓
-PaddleOCR Engine (PaddleX API)
-    ├── Text detection
-    ├── Text recognition
-    └── Confidence scores per word
-    ↓
-Extraction Engine
-    ├── Regex pattern matching
-    │   ├── Tractor No: MH-\d{2}[A-Z]{2}\d{4}
-    │   ├── Engine No: [A-Z0-9]{6,20}
-    │   ├── Chassis No: [A-Z0-9]{6,20}
-    │   ├── Date patterns (DD/MM/YYYY, etc.)
-    │   ├── Shift patterns (1st, 2nd, 3rd, General)
-    │   └── Line No patterns
-    ├── Zonal OCR (pre-defined coordinate regions)
-    └── Fuzzy matching (RapidFuzz) for defect names
-    ↓
-Confidence Engine
-    ├── Per-field confidence from OCR scores
-    ├── Overall page confidence (average)
-    └── Auto-approve if confidence > threshold (0.85)
-    ↓
-Duplicate Detection
-    ├── SHA256 of raw text
-    └── Cosine similarity on extracted fields
-    ↓
-Storage
-    ├── Original PDF
-    ├── Enhanced page images
-    ├── OCR JSON (raw PaddleX output)
-    └── Verified JSON (human-corrected fields)
-```
-
-## Performance Targets
-- 500 pages: under 8 minutes total
-- OCR accuracy: 96%+
-- Auto-approval rate: 95%+
-- Manual review rate: <5%
+## Key UI Components (shadcn)
+button, card, input, select, badge, table, dialog, label, separator, sonner

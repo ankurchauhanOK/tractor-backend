@@ -44,3 +44,15 @@ class EventType(enum.Enum):
     DUPLICATE_FOUND = "duplicate_found"
     VERIFIED = "verified"
     EXPORTED = "exported"
+
+
+class AIProvider(enum.Enum):
+    QWEN = "qwen"
+    GEMINI = "gemini"
+    OCR = "ocr"
+
+
+class VisionStatus(enum.Enum):
+    PASS = "pass"
+    FAIL = "fail"
+    NEEDS_REVIEW = "needs_review"

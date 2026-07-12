@@ -63,7 +63,7 @@ class ExtractionResult:
         }
 
 
-class ExtractionEngine:
+class GenericExtractionEngine:
     CONFIDENCE_THRESHOLD = 0.7
 
     def extract(self, raw_text: str, ocr_confidence: float) -> ExtractionResult:
@@ -219,6 +219,71 @@ class ExtractionEngine:
             "date": base * 0.9 if date else base * 0.3,
             "dif": base if defects else base * 0.5,
         }
+
+
+class ExtractionEngine:
+    def __init__(self):
+        self._template_detector = None
+        self._mahindra_parser = None
+        self._generic_engine = GenericExtractionEngine()
+
+    def extract(
+        self,
+        raw_text: str,
+        words: Optional[List[dict]] = None,
+        ocr_confidence: float = 0.0,
+        enhanced_bytes: Optional[bytes] = None,
+    ) -> ExtractionResult:
+        if not words:
+            return self._generic_engine.extract(raw_text, ocr_confidence)
+
+        try:
+            return self._route_by_template(raw_text, words, ocr_confidence, enhanced_bytes)
+        except Exception as e:
+            logger.warning("Layout extraction failed, falling back to generic: %s", e)
+            return self._generic_engine.extract(raw_text, ocr_confidence)
+
+    def _route_by_template(
+        self,
+        raw_text: str,
+        words: List[dict],
+        ocr_confidence: float,
+        enhanced_bytes: Optional[bytes] = None,
+    ) -> ExtractionResult:
+        if self._template_detector is None:
+            from app.services.layout.template_detector import TemplateDetector
+            self._template_detector = TemplateDetector()
+
+        template_id = self._template_detector.identify(words)
+        logger.info("Template detected: %s", template_id)
+
+        if template_id == "mahindra_tractor_v1":
+            if self._mahindra_parser is None:
+                from app.services.parsers.mahindra_parser import MahindraParser
+                self._mahindra_parser = MahindraParser()
+
+            result = self._mahindra_parser.parse(words, ocr_confidence, enhanced_bytes)
+            er = ExtractionResult(
+                tractor_no=result.tractor_no,
+                tractor_model=result.tractor_model,
+                engine_no=result.engine_no,
+                chassis_no=result.chassis_no,
+                inspector=result.inspector,
+                date=result.date,
+                shift=result.shift,
+                line_no=result.line_no,
+                defects=result.defects,
+                needs_review=result.needs_review,
+                confidence_scores=result.confidence_scores,
+            )
+            logger.info(
+                "Mahindra parser: tractor=%s engine=%s chassis=%s defects=%d review=%s",
+                result.tractor_no, result.engine_no, result.chassis_no,
+                len(result.defects), result.needs_review,
+            )
+            return er
+
+        return self._generic_engine.extract(raw_text, ocr_confidence)
 
     def check_duplicate(
         self,

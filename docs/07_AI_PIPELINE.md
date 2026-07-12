@@ -9,16 +9,14 @@ PDF Splitter (PyMuPDF) → Individual page images
     ↓
 Image Enhancer (OpenCV)
     ├── Grayscale conversion
-    ├── Binarization (OTSU threshold)
-    ├── Deskew (Hough transform)
     ├── Denoise (Non-local means)
+    ├── Deskew (minAreaRect)
     ├── Contrast enhancement (CLAHE)
-    └── Sharpening (unsharp mask)
+    └── Binarization (OTSU threshold)
     ↓
-PaddleOCR Engine (PaddleX API)
-    ├── Text detection
-    ├── Text recognition
-    └── Confidence scores per word
+OCR Engine
+    ├── PaddleOCR (primary)
+    └── EasyOCR (fallback if PaddleOCR fails to initialize)
     ↓
 Extraction Engine
     ├── Regex pattern matching
@@ -28,8 +26,7 @@ Extraction Engine
     │   ├── Date patterns (DD/MM/YYYY, etc.)
     │   ├── Shift patterns (1st, 2nd, 3rd, General)
     │   └── Line No patterns
-    ├── Zonal OCR (pre-defined coordinate regions)
-    └── Fuzzy matching (RapidFuzz) for defect names
+    │   └── Exact field matching for defect names
     ↓
 Confidence Engine
     ├── Per-field confidence from OCR scores
@@ -37,15 +34,21 @@ Confidence Engine
     └── Auto-approve if confidence > threshold (0.85)
     ↓
 Duplicate Detection
-    ├── SHA256 of raw text
-    └── Cosine similarity on extracted fields
+    ├── SHA256 of raw OCR text
+    └── Exact field matching (tractor_no, engine_no, chassis_no)
     ↓
 Storage
     ├── Original PDF
     ├── Enhanced page images
-    ├── OCR JSON (raw PaddleX output)
+    ├── OCR JSON (raw PaddleOCR output)
     └── Verified JSON (human-corrected fields)
 ```
+
+## Notes
+- **Sharpening** is not currently applied (documented but unimplemented)
+- **Zonal OCR** (pre-defined coordinate regions) is not implemented — extraction relies solely on regex pattern matching against full OCR text
+- **RapidFuzz / fuzzy matching** is listed in dependencies but not yet integrated
+- **Cosine similarity** for duplicate detection is not implemented — the system uses exact field matching instead
 
 ## Performance Targets
 - 500 pages: under 8 minutes total

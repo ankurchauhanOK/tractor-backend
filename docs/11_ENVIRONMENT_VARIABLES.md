@@ -6,7 +6,7 @@
 |----------|----------|----------|---------|-------------|
 | DATABASE_URL | Yes | api, worker | localhost:5432 | PostgreSQL connection string |
 | REDIS_URL | Yes | api, worker | localhost:6379 | Redis connection string |
-| SECRET_KEY | Yes | api | — | Secret key for auth/sessions |
+| SECRET_KEY | No | api | — | Reserved for future auth (currently unused by code) |
 | CORS_ORIGINS | No | api | localhost:3000,localhost:3001 | Comma-separated allowed origins |
 | PORT | No | api | 8000 | Server port (Render sets this) |
 
@@ -37,6 +37,10 @@
 | MAX_PDF_PAGES | No | both | 500 | Max pages per PDF |
 | PDF_DPI | No | both | 300 | PDF rendering DPI |
 | MAX_RETRY_COUNT | No | both | 3 | OCR retry count |
+| MAX_PAGE_WIDTH | No | both | 5000 | Max rendered page width in pixels |
+| MAX_PAGE_HEIGHT | No | both | 10000 | Max rendered page height in pixels |
+| DB_POOL_SIZE | No | api | 20 | SQLAlchemy connection pool size |
+| DB_MAX_OVERFLOW | No | api | 10 | SQLAlchemy max pool overflow |
 
 ## Version Tags
 

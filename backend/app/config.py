@@ -35,3 +35,22 @@ MAX_PDF_PAGES = int(os.getenv("MAX_PDF_PAGES", "500"))
 MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "500"))
 MAX_PAGE_WIDTH = int(os.getenv("MAX_PAGE_WIDTH", "5000"))
 MAX_PAGE_HEIGHT = int(os.getenv("MAX_PAGE_HEIGHT", "10000"))
+
+# ── Vision AI Pipeline ──────────────────────────────────────
+
+VISION_PIPELINE_ENABLED = os.getenv("VISION_PIPELINE_ENABLED", "false").lower() == "true"
+CONFIDENCE_THRESHOLD = float(os.getenv("CONFIDENCE_THRESHOLD", "0.7"))
+
+QWEN_API_KEY = os.getenv("QWEN_API_KEY", "")
+QWEN_MODEL = os.getenv("QWEN_MODEL", "qwen-vl-max")
+QWEN_API_URL = os.getenv("QWEN_API_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions")
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+
+# ── Scan Validation ─────────────────────────────────────────
+
+EXPECTED_PAGE_WIDTH = int(os.getenv("EXPECTED_PAGE_WIDTH", "2480"))
+EXPECTED_PAGE_HEIGHT = int(os.getenv("EXPECTED_PAGE_HEIGHT", "3508"))
+EXPECTED_DPI = int(os.getenv("EXPECTED_DPI", "300"))
+BLANK_PAGE_THRESHOLD = float(os.getenv("BLANK_PAGE_THRESHOLD", "0.98"))

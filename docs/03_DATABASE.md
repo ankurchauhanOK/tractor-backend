@@ -106,8 +106,39 @@
 | action_taken | VARCHAR(32) |
 | created_at | TIMESTAMP |
 
+### defect_library
+| Column | Type | Notes |
+|--------|------|-------|
+| id | INTEGER PK | Auto-increment |
+| name | VARCHAR(255) | Defect name |
+| category | VARCHAR(128) | Defect category |
+| description | TEXT | Optional description |
+| created_at | TIMESTAMP | |
+
+### correction_log
+| Column | Type | Notes |
+|--------|------|-------|
+| id | INTEGER PK | Auto-increment |
+| inspection_id | INTEGER FK | References inspections.id |
+| field_name | VARCHAR(64) | Which field was corrected |
+| old_value | TEXT | Value before correction |
+| new_value | TEXT | Value after correction |
+| corrected_by | VARCHAR(255) | |
+| created_at | TIMESTAMP | |
+
+### learning_entries
+| Column | Type | Notes |
+|--------|------|-------|
+| id | INTEGER PK | Auto-increment |
+| inspection_id | INTEGER FK | References inspections.id |
+| field_name | VARCHAR(64) | Field used for learning |
+| raw_value | TEXT | Raw OCR output |
+| corrected_value | TEXT | Human-corrected value |
+| confidence | FLOAT | OCR confidence at time of correction |
+| created_at | TIMESTAMP | |
+
 ## Indexes
 - batches: (status), (created_at)
 - inspections: (batch_id), (status)
 - system_events: (event), (created_at)
-- duplicate_logs: (inspection_id), (matched_inspection_id)
+- duplicate_logs: (inspection_id), (duplicate_of_id)
